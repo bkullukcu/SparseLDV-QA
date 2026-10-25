@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sparseldv-qa"
+version = "0.8.2"
+description = "Quality-aware spatial sample selection and auditable complex FRF reconstruction for scanning laser vibrometry."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = ["numpy>=1.24", "scipy>=1.10", "pandas>=1.5", "matplotlib>=3.6"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+keywords = ["research-software", "reproducibility", "acoustics", "vibration"]
+
+[project.optional-dependencies]
+dev = ["build>=1", "pytest>=7", "twine>=5", "tomli>=2; python_version < '3.11'"]
+docs = ["mkdocs>=1.6"]
+sensors = ["pysensors>=0.1"]
+
+[project.scripts]
+sparseldv-qa = "sparseldv_qa.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

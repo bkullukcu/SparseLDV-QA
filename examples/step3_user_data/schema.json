@@ -1,0 +1,26 @@
+{
+  "coordinate_unit": "mm",
+  "frequency_unit": "Hz",
+  "response_unit": "m/s/N (mobility, synthetic example)",
+  "quality_kind": "magnitude_squared_coherence",
+  "truth_sample": "holdout_C",
+  "training_samples": [
+    "train_A",
+    "train_B"
+  ],
+  "sample_groups": {
+    "train_A": "session_A",
+    "train_B": "session_B",
+    "holdout_C": "session_C"
+  },
+  "enforce_group_holdout": true,
+  "columns": {
+    "sample": "scan",
+    "point": "location",
+    "frequency": "f_hz",
+    "real": "real_part",
+    "imag": "imag_part",
+    "x": "x_mm",
+    "y": "y_mm"
+  }
+}
