@@ -1,58 +1,84 @@
 # SparseLDV-QA
 
-**Sensor selection and complex FRF reconstruction for scanning laser vibrometry.**
+**Sensor placement and complex frequency-response reconstruction for sparse vibrometry.**
 
-SparseLDV-QA works with frequency-response measurements sampled at spatial locations. Given several complex FRF scans and the measurement coordinates, it selects a subset of points and reconstructs the response elsewhere. It includes geometry-based and response-based selection methods, reconstruction baselines, and metrics for held-out measurements.
+SparseLDV-QA selects spatial measurement locations from training FRFs and reconstructs the complex response at unmeasured locations. The package exposes response-based selection, geometric and QR/POD baselines, graph-regularized reconstruction, and held-out error measures. It is intended for researchers working with scanning laser Doppler vibrometry and other spatially sampled FRF data.
 
-This is a research-stage package (`v0.8.2`). The API may change before version 1.0.
+**Research software preview · v0.8.2 · Python 3.10–3.13 · MIT**
 
-## Install
+## Example: select points, reconstruct responses
 
-Python 3.10 or newer is required. From the repository directory:
+![Synthetic sensor placement on a measurement grid](docs/figures/sensor_selection.svg)
+
+*Ten points selected from a synthetic 36-point grid using training scans only. Numbers show the selection order, not measurement priority or experimental quality.*
+
+![Complex FRF reconstruction at an unmeasured position](docs/figures/frf_reconstruction.svg)
+
+*Held-out synthetic FRF. The reference and reconstruction are compared at a representative unmeasured position; global NRMSE is evaluated only at unmeasured points. This is a numerical demonstration, not an experimental benchmark.*
+
+Both figures are generated using the actual package API. Reproduce them with `python examples/make_readme_figures.py`. The generator uses fixed synthetic inputs and reads no laboratory data.
+
+## Install and run
+
+Clone this repository and run the following commands from its root directory:
 
 ```bash
 python -m pip install -e .
 python examples/quickstart.py
 ```
 
-The quickstart uses a small synthetic FRF. It checks that the reconstruction API runs; it is not an experimental accuracy benchmark.
-
-For development and tests:
+The quickstart runs a known-truth synthetic reconstruction and prints the NRMSE. To run the test suite:
 
 ```bash
-python -m pip install -e '.[dev]'
+python -m pip install -e ".[dev]"
 python -m pytest -q
 ```
 
-## Use your own measurements
+## Import your FRFs
 
-The input converter accepts CSV and NumPy archives. A JSON schema maps the original columns, units and sample identifiers. Complex responses can be supplied as real/imaginary pairs, or as linear magnitude and phase with an explicitly declared phase convention.
+Supply either a CSV measurement table or an NPZ archive, with a JSON schema describing coordinate columns, frequencies, units and complex representation.
 
 ```bash
 sparseldv-qa convert examples/step3_user_data/frf_long.csv \
   --schema examples/step3_user_data/schema.json \
   --output example_frfs.npz
 
-sparseldv-qa example_frfs.npz --count 2 --output example_reconstruction.npz
+sparseldv-qa example_frfs.npz --count 2 \
+  --output example_reconstruction.npz
 ```
 
-The first command creates a validated NPZ file and a provenance manifest. The second selects measurement points and reconstructs the held-out response in that file. Replace the sample CSV and schema with your own files once their column definitions have been checked.
+The converter checks the frequency grid and spatial sample identifiers before writing a normalized NPZ and a provenance manifest. Complex data may be stored as real/imaginary parts or as magnitude/phase with an explicit phase convention. See [Data import](docs/USER_DATA_IMPORT.md) for the input contract and the NumPy example.
 
-See [the input guide](docs/USER_DATA_IMPORT.md) for array dimensions, required metadata and NumPy input. The included fixtures are synthetic.
+## Method in brief
 
-## What the results mean
+For observed FRFs $\mathbf{H}_{\mathrm{obs}}$ at selected spatial positions, reconstruction solves
 
-The reconstruction error is meaningful only when the reference response was withheld from sensor selection and model fitting. Measurements from several excitation points on one specimen are not independent specimen-level validation. Coherence-based weights require measured coherence; they cannot be inferred from FRF amplitude.
+$$
+\left(\mathbf{D}+\alpha\mathbf{L}+\varepsilon\mathbf{I}\right)\widehat{\mathbf{H}}=\mathbf{B},
+$$
 
-No experimental recordings or derived benchmark tables are shipped. The numerical tests use synthetic inputs. For the original-study context and validation limits, see [research notes](docs/RESEARCH_NOTES.md).
+where $\mathbf{L}$ is a graph Laplacian derived from spatial coordinates, $\mathbf{D}$ contains observation weights at the measured positions, and $\mathbf{B}$ contains the weighted measured complex FRFs. The regularization parameter $\alpha$ controls spatial smoothing. Sensor selection and parameter tuning must use training data only.
 
-## Repository contents
+The evaluation routine reports the complex-response NRMSE and median FRAC on **unmeasured** positions. These metrics describe agreement with a held-out reference; they are not a guarantee that sparse measurements will be sufficient for another specimen.
 
-- `src/sparseldv_qa/` — numerical routines, input conversion and command-line interface
-- `examples/` — synthetic run, sample CSV/NPZ inputs and a grouped FRF evaluation script
-- `tests/` — unit and regression tests
-- `docs/` — input format and methodological notes
+## Scope
+
+- Input: complex FRFs, coordinates, and (optionally) measured coherence.
+- Output: selected point indices, reconstructed complex FRFs, and comparison metrics.
+- Limit: results depend on the training structures, excitation conditions, measurement quality and chosen reconstruction parameters. The public repository does not contain experimental recordings or source-derived benchmark tables.
+
+See [Research notes](docs/RESEARCH_NOTES.md) for validation boundaries and [FAQ](docs/FAQ.md) for common import questions. For a more detailed training-group split with your own measurements, see [`examples/benchmark_real_frf.py`](examples/benchmark_real_frf.py).
+
+## Reproduce the figures
+
+```bash
+python examples/make_readme_figures.py
+# Optional: use an installed LaTeX distribution to typeset figure labels
+python examples/make_readme_figures.py --latex
+```
+
+The two vector SVGs are kept under `docs/figures/`; the plotting code is in `examples/`. No additional plotting data are needed.
 
 ## Citation and license
 
-Citation metadata is in [CITATION.cff](CITATION.cff). Cite the original datasets separately when using their measurements. The source is supplied under the MIT license; confirm institutional authorization before making a public release. The software has not yet undergone independent multi-laboratory validation.
+See [`CITATION.cff`](CITATION.cff) for the software citation and [`LICENSE`](LICENSE) for the code license. Cite any external measurement dataset separately. This preview has not been independently validated across laboratories, and its API may change before 1.0.
