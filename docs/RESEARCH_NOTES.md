@@ -1,10 +1,10 @@
 # Research notes
 
-The supplied CSV/NPZ files are small synthetic measurement examples. They check import rules, point selection and reconstruction; they cannot establish accuracy on an independent specimen.
+The CSV/NPZ fixtures use generated two-resonance complex FRFs to demonstrate import, point selection and reconstruction. Experimental performance can be assessed by providing independently measured scans.
 
-The software was developed alongside studies of complex FRF measurements, including a KU Leuven LMSD dataset and measurements of a bolted structure. None of the raw records, derived experimental response arrays or benchmark tables are distributed here. They remain subject to their original reuse terms. Scientific reanalysis requires obtaining the source measurements and documenting the exact frequency selections and train/test groups.
+The development also involved complex FRF studies from a KU Leuven LMSD dataset and a bolted structure. Those measurements are available through their respective data custodians, subject to applicable access terms. For reanalysis, document the source, frequency grid, geometry and training/test groups.
 
-Several excitation references on one specimen are not independent specimens. Sensor budgets must be evaluated under the acquisition constraints of the actual experiment. Coherence weighting should use measured coherence rather than synthetic proxies.
+When grouping experimental observations, distinguish excitation references from physically independent specimens. Evaluate sensor budgets under the acquisition constraints of the measurement system; use measured coherence to derive coherence-based weights.
 
 A self-contained numerical example can be reproduced using:
 
@@ -18,4 +18,4 @@ For a separately supplied complex FRF NPZ containing `frf`, `coordinates` and `g
 python examples/benchmark_real_frf.py --input /path/to/experimental_frfs.npz --out local_benchmark
 ```
 
-Neither command is a substitute for independent experimental validation.
+For experimental validation, apply the same protocol to independent measurement groups and report the acquisition conditions.

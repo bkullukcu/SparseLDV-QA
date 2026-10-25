@@ -4,7 +4,7 @@
 
 - Two README figures generated from deterministic two-resonance FRFs, including training-only spatial selection and held-out complex reconstruction.
 - Added a standalone figure regeneration script, a short FAQ and figure validation tests.
-- No change to the reconstruction or selection implementation.
+- Sensor selection and reconstruction methods unchanged.
 
 
 ## 0.8.2 — release candidate

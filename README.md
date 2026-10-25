@@ -10,13 +10,13 @@ SparseLDV-QA selects spatial measurement locations from training FRFs and recons
 
 ![Synthetic sensor placement on a measurement grid](docs/figures/sensor_selection.svg)
 
-*Ten points selected from a synthetic 36-point grid using training scans only. Numbers show the selection order, not measurement priority or experimental quality.*
+*Ten locations selected on a 36-point synthetic grid. Labels indicate selection order.*
 
 ![Complex FRF reconstruction at an unmeasured position](docs/figures/frf_reconstruction.svg)
 
-*Held-out synthetic FRF. The reference and reconstruction are compared at a representative unmeasured position; global NRMSE is evaluated only at unmeasured points. This is a numerical demonstration, not an experimental benchmark.*
+*Synthetic reference and reconstructed FRFs at a withheld grid point. The reported NRMSE uses all withheld positions.*
 
-Both figures are generated using the actual package API. Reproduce them with `python examples/make_readme_figures.py`. The generator uses fixed synthetic inputs and reads no laboratory data.
+Both figures use the package API and a fixed, reproducible synthetic example. Regenerate them with `python examples/make_readme_figures.py`.
 
 ## Install and run
 
@@ -59,15 +59,15 @@ $$
 
 where $\mathbf{L}$ is a graph Laplacian derived from spatial coordinates, $\mathbf{D}$ contains observation weights at the measured positions, and $\mathbf{B}$ contains the weighted measured complex FRFs. The regularization parameter $\alpha$ controls spatial smoothing. Sensor selection and parameter tuning must use training data only.
 
-The evaluation routine reports the complex-response NRMSE and median FRAC on **unmeasured** positions. These metrics describe agreement with a held-out reference; they are not a guarantee that sparse measurements will be sufficient for another specimen.
+Evaluation reports complex-response NRMSE and median FRAC at withheld positions. For experimental comparisons, use reference FRFs from independent measurement groups.
 
-## Scope
+## Inputs and outputs
 
-- Input: complex FRFs, coordinates, and (optionally) measured coherence.
-- Output: selected point indices, reconstructed complex FRFs, and comparison metrics.
-- Limit: results depend on the training structures, excitation conditions, measurement quality and chosen reconstruction parameters. The public repository does not contain experimental recordings or source-derived benchmark tables.
+- **Input:** complex FRFs, sensor coordinates, and optional coherence estimates.
+- **Output:** selected locations, spatially reconstructed complex FRFs, NRMSE and FRAC summaries.
+- **Evaluation:** performance depends on geometry, excitation, signal quality and the training/test split.
 
-See [Research notes](docs/RESEARCH_NOTES.md) for validation boundaries and [FAQ](docs/FAQ.md) for common import questions. For a more detailed training-group split with your own measurements, see [`examples/benchmark_real_frf.py`](examples/benchmark_real_frf.py).
+The repository includes generated example measurements. For experiments with grouped scans, see [`examples/benchmark_real_frf.py`](examples/benchmark_real_frf.py) and the [measurement notes](docs/RESEARCH_NOTES.md). [FAQ](docs/FAQ.md) covers common import questions.
 
 ## Reproduce the figures
 
@@ -77,8 +77,8 @@ python examples/make_readme_figures.py
 python examples/make_readme_figures.py --latex
 ```
 
-The two vector SVGs are kept under `docs/figures/`; the plotting code is in `examples/`. No additional plotting data are needed.
+The two SVG files are stored in `docs/figures/`; their generation script is in `examples/`.
 
 ## Citation and license
 
-See [`CITATION.cff`](CITATION.cff) for the software citation and [`LICENSE`](LICENSE) for the code license. Cite any external measurement dataset separately. This preview has not been independently validated across laboratories, and its API may change before 1.0.
+Use [`CITATION.cff`](CITATION.cff) when citing the software and [`LICENSE`](LICENSE) for license terms. Refer to the original source when citing an experimental dataset.

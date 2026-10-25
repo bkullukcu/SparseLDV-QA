@@ -1,21 +1,21 @@
-# FAQ
+# Frequently asked questions
 
-**Do I need a complete spatial FRF scan to use this package?**
+**How much training data is needed for sensor selection?**
 
-Point selection is trained on complex FRFs from earlier scans. For reconstruction, only the selected locations are required. Evaluation of reconstruction accuracy needs reference FRFs at the unmeasured locations; without a reference there is no measured NRMSE.
+Use complex FRFs from earlier scans with known spatial coordinates. Reconstruction then needs measurements at the selected locations. To calculate NRMSE at withheld positions, include a separate reference scan covering those positions.
 
-**Which FRF representation can I import?**
+**Which FRF formats are supported?**
 
-Use real/imaginary components or linear magnitude and phase. Declare the phase unit and convention explicitly in the JSON schema. A magnitude-only spectrum is insufficient for complex reconstruction.
+Supply real and imaginary components, or linear magnitude and phase with a declared phase unit and sign convention. The complex reconstruction uses both amplitude and phase.
 
-**Does sensor selection use the test scan?**
+**How should I split a dataset?**
 
-It must not. Fit the selector with training scans, then reconstruct the held-out scan using its selected locations. If measurements are grouped by specimen or mounting configuration, keep complete groups out of training.
+Fit selection and reconstruction parameters on training scans. Set aside the evaluation scan before fitting. When the experiment involves multiple specimens or mountings, use specimen- or configuration-level groups.
 
-**Are the README plots experimental results?**
+**Where do the README figures come from?**
 
-No. They come from generated two-resonance complex FRFs. Regenerate them with `python examples/make_readme_figures.py`. They illustrate the workflow but are not evidence of measurement-time savings or accuracy on a new specimen.
+`python examples/make_readme_figures.py` generates two-resonance complex FRFs and passes them through the package's selection and reconstruction functions. The plots show the numerical workflow on known synthetic responses.
 
-**What is required to reproduce a published experimental comparison?**
+**How do I reproduce an experimental comparison?**
 
-The source dataset, geometry, complex FRF processing settings, training/test split, selection parameters, and permission to reuse those measurements. These experimental datasets are not distributed here.
+Collect the source measurements, spatial coordinates, complex FRF processing settings, selection budget and train/test assignments. The full procedure is outlined in [Research notes](RESEARCH_NOTES.md).
