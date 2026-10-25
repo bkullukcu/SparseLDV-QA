@@ -81,4 +81,4 @@ The two SVG files are stored in `docs/figures/`; their generation script is in `
 
 ## Citation and license
 
-Use [`CITATION.cff`](CITATION.cff) when citing the software and [`LICENSE`](LICENSE) for license terms. Refer to the original source when citing an experimental dataset.
+**Software authors:** Berkay Kullukcu and Dina Hannebauer. Use [`CITATION.cff`](CITATION.cff) for APA and BibTeX citations and [`LICENSE`](LICENSE) for license terms. Cite experimental datasets by their original sources.
