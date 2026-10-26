@@ -2,6 +2,8 @@
 
 **Sensor placement and complex frequency-response reconstruction for sparse vibrometry.**
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23661585.svg)](https://doi.org/10.5281/zenodo.23661585)
+
 SparseLDV-QA selects spatial measurement locations from training FRFs and reconstructs the complex response at unmeasured locations. The package exposes response-based selection, geometric and QR/POD baselines, graph-regularized reconstruction, and held-out error measures. It is intended for researchers working with scanning laser Doppler vibrometry and other spatially sampled FRF data.
 
 **Research software preview · v0.8.2 · Python 3.10–3.13 · MIT**
