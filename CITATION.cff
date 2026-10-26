@@ -3,6 +3,7 @@ message: "Please cite this software and the original datasets separately."
 title: "SparseLDV-QA"
 type: software
 version: 0.8.2
+doi: 10.5281/zenodo.23661585
 authors:
   - family-names: Kullukcu
     given-names: Berkay
