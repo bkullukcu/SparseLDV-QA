@@ -59,7 +59,7 @@ def select_points(training, count, quality=None, ridge=0.05):
     if h.ndim!=3 or not np.isfinite(h).all():
         raise ValueError('training must be finite (sample, point, frequency)')
     n=h.shape[1]
-    if not isinstance(count,(int,np.integer)) or not 1<=count<=n or ridge<=0:
+    if not isinstance(count,(int,np.integer)) or not 1<=count<=n or not np.isfinite(ridge) or ridge<=0:
         raise ValueError('invalid count or ridge')
     q=np.ones(n) if quality is None else np.asarray(quality,float)
     if q.shape!=(n,) or not np.isfinite(q).all() or np.any((q<0)|(q>1)) or np.sum(q>0)<count:
@@ -93,7 +93,7 @@ def reconstruct(observed, indices, laplacian, alpha=0.1, quality=None):
     n=len(l)
     if s.ndim!=1 or s.dtype.kind not in 'iu' or len(np.unique(s))!=len(s) or np.any((s<0)|(s>=n)):
         raise ValueError('unique integer point indices required')
-    if y.ndim!=2 or y.shape[0]!=len(s) or len(s)==0 or not np.isfinite(y).all() or alpha<=0:
+    if y.ndim!=2 or y.shape[0]!=len(s) or len(s)==0 or not np.isfinite(y).all() or not np.isfinite(alpha) or alpha<=0:
         raise ValueError('invalid observations or alpha')
     q=np.ones(len(s)) if quality is None else np.asarray(quality,float)
     if q.shape!=(len(s),) or not np.isfinite(q).all() or np.any((q<=0)|(q>1)):
