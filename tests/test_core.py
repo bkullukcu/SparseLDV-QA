@@ -25,6 +25,14 @@ class TestNumerics(unittest.TestCase):
   with self.assertRaises(ValueError):graph_laplacian(np.ones((3,2)),2)
  def test_bad_observation_indices(self):
   with self.assertRaises(ValueError):reconstruct(np.ones((2,3)),np.array([0,0]),graph_laplacian(self.xy,3))
+ def test_nonfinite_regularization_rejected(self):
+  l=graph_laplacian(self.xy,3)
+  for invalid in (np.nan,np.inf,-np.inf):
+   with self.subTest(regularization=invalid):
+    with self.assertRaises(ValueError):
+     select_points(self.h,3,ridge=invalid)
+    with self.assertRaises(ValueError):
+     reconstruct(self.h[0,:3],np.arange(3),l,alpha=invalid)
  def test_full_observation_score_rejected(self):
   with self.assertRaises(ValueError):evaluate_reconstruction(self.h[0],self.h[0],np.arange(9))
 if __name__=='__main__':unittest.main()
