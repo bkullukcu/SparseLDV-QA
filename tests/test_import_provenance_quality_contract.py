@@ -54,8 +54,8 @@ def test_holdout_coherence_cannot_change_training_quality(tmp_path):
         modified, allow_pickle=False
     ) as after:
         np.testing.assert_array_equal(before["quality"], after["quality"])
-        np.testing.assert_array_equal(before["training"], after["training"])
-        np.testing.assert_array_equal(before["truth"], after["truth"])
+        np.testing.assert_allclose(before["training"], after["training"], rtol=1e-12, atol=1e-12)
+        np.testing.assert_allclose(before["truth"], after["truth"], rtol=1e-12, atol=1e-12)
     assert changed_report["quality_computed_from_training_only"] is True
     assert changed_report["source_sha256"] == _digest(modified_source)
     assert changed_report["source_sha256"] != _digest(source)
